@@ -1,0 +1,36 @@
+.form-wrapper {
+  width: 1280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-input {
+  width: 20%;
+  height: 2.5rem;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+.form-button {
+  width: 10%;
+  height: 2.7rem;
+  border-radius: 5px;
+  border: transparent;
+  cursor: pointer;
+}
+.form-input:hover {
+  border-color: #646cff;
+}
+
+.user-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.user-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  margin-top: 50px;
+}

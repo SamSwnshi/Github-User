@@ -7,10 +7,12 @@ export const getUserProfile = async (req, res) => {
       `https://api.github.com/users/${username}`
     );
 
-    const userProfile = await response.data;
+    const userProfile =  response.data;
     res.status(200).json(userProfile);
+
+    
   } catch (error) {
-    console.log("Error in Getting userProfile", error.message);
+    console.log("Error in Getting getUserProfile", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

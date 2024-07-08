@@ -1,0 +1,43 @@
+.repository-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+   
+  }
+  
+  .card {
+    
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(25% - 20px); 
+    padding: 16px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .card-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
+  }
+  
+  .card-header h3 {
+    margin: 0;
+  }
+  
+  .card-body {
+    margin-top: 10px;
+  }
+  
+  .card-body p {
+    margin: 5px 0;
+  }
