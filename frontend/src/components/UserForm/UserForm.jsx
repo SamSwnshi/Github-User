@@ -28,7 +28,7 @@ const UserForm = () => {
             const reposResponse = await axios.get(`/api/users/${username}/repos`);
             setRepositories(reposResponse.data);
             setFetching(false); // Reset fetching indicator
-          }, 10000); // Delay of 3 seconds (adjust as necessary)
+          }, 9000); // Delay of 3 seconds (adjust as necessary)
         }
       } catch (error) {
         console.log(error.message);
