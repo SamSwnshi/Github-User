@@ -7,6 +7,27 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    avatar_url: {
+      type: String,
+    },
+    repos_url:{
+      type: String,
+    },
+    url: {
+      type: String,
+    },
+    html_url: {
+      type: String,
+    },
+    followers_url: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
     location: {
       type: String,
     },

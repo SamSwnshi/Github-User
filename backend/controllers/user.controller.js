@@ -1,21 +1,56 @@
 import User from "../models/user.models.js";
 import axios from "axios";
+
+export const fetchFollowers = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const response = await axios.get(`https://api.github.com/users/${username}/followers`, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_TOKEN}` // Replace with your token
+      }
+    });
+    const followers = response.data;
+    res.status(200).json(followers);
+  } catch (error) {
+    console.log(`Error in fetching followers for ${username}`, error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const fetchRepositories = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const response = await axios.get(`https://api.github.com/users/${username}/repos`, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_TOKEN}` // Replace with your token
+      }
+    });
+    const repositories = response.data;
+    res.status(200).json(repositories);
+  } catch (error) {
+    console.log(`Error in fetching repositories for ${username}`, error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const getUserProfile = async (req, res) => {
   const { username } = req.params;
   try {
-    const response = await axios.get(
-      `https://api.github.com/users/${username}`,{
-        headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`
-        }
+    const response = await axios.get(`https://api.github.com/users/${username}`, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_TOKEN}` // Replace with your actual token
       }
-    );
+    });
 
     const userProfile = response.data;
     res.status(200).json(userProfile);
   } catch (error) {
-    console.log("Error in Getting getUserProfile", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    if (error.response && error.response.status === 404) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      console.log("Error in Getting getUserProfile", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 };
 export const saveProfile = async (req, res) => {
@@ -33,7 +68,15 @@ export const saveProfile = async (req, res) => {
 
       user = new User({
         username: gitHub.login,
+        avatar_url: gitHub.avatar_url,
+        repos_url: gitHub.repos_url,
+        url: gitHub.url,
+        html_url: gitHub.html_url,
+        followers_url: gitHub.followers_url,
+        type: gitHub.type,
+        name: gitHub.name,
         location: gitHub.location,
+        bio: gitHub.bio,
         blog: gitHub.blog,
         public_gists: gitHub.public_gists,
         public_repos: gitHub.public_repos,

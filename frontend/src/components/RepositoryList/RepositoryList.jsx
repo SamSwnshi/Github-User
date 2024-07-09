@@ -1,11 +1,10 @@
-
-import "./RepositoryList.css"
+import "./RepositoryList.css";
 
 const RepositoryList = ({ repositories, username }) => {
   return (
     <div className="repository-wrapper">
       <div className="card-container">
-        {repositories.map(repo => (
+        {repositories && Array.isArray(repositories) && repositories.map(repo => (
           <div className="card" key={repo.id}>
             <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
               <div className="card-header">

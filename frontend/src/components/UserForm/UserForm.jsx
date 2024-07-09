@@ -3,30 +3,32 @@ import { useState, useEffect } from "react";
 import RepositoryList from "../RepositoryList/RepositoryList";
 import "./UserForm.css";
 import { Link } from "react-router-dom";
-import Followers from "../Followers/Followers";
 
 const UserForm = () => {
   const [username, setUsername] = useState("");
   const [userData, setUserData] = useState(null);
   const [repositories, setRepositories] = useState([]);
-  const [followers,serFollowers] = useState([]);
-
-
+  const [fetching, setFetching] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch user data if username is set and not already fetched
         if (username && (!userData || userData.login !== username)) {
-          const userResponse = await axios.get(`https://api.github.com/users/${username}`);
-          console.log(userResponse.data)
+          const userResponse = await axios.get(`/api/users/${username}`);
           setUserData(userResponse.data);
         }
 
         // Fetch repositories if username is set and repositories are not already fetched
-        if (username && repositories.length === 0) {
-          const reposResponse = await axios.get(`https://api.github.com/users/${username}/repos`);
-          setRepositories(reposResponse.data);
+        if (username && repositories.length === 0 && !fetching) {
+          setFetching(true); // Start fetching indicator
+
+          // Delay fetching repositories 
+          setTimeout(async () => {
+            const reposResponse = await axios.get(`/api/users/${username}/repos`);
+            setRepositories(reposResponse.data);
+            setFetching(false); // Reset fetching indicator
+          }, 10000); // Delay of 3 seconds (adjust as necessary)
         }
       } catch (error) {
         console.log(error.message);
@@ -34,11 +36,17 @@ const UserForm = () => {
     };
 
     fetchData();
-  }, [username]); // Fetch data when username changes
+  }, [username, userData, repositories.length, fetching]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // handleSubmit can be left empty for best practices 
+    try {
+      await axios.post(`/api/users/${username}/save`);
+      const userResponse = await axios.get(`/api/users/${username}`);
+      setUserData(userResponse.data);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -72,7 +80,8 @@ const UserForm = () => {
               <h4>Bio: {userData.bio}</h4>
               <p>Followers: {userData.followers}</p>
               <Link to={`/followers/${username}`}>
-              View Followers</Link>
+                View Followers
+              </Link>
             </div>
           </div>
           <h2>Repositories</h2>

@@ -1,18 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import "./RepositoryDetail.css";
+import "./detail.css";
 
-const RepositoryDetail = ({ person }) => {
+const RepositoryDetail = () => {
   const { username, repoName } = useParams();
   const [repository, setRepository] = useState(null);
-
-  console.log(person);
 
   useEffect(() => {
     const fetchRepository = async () => {
       try {
-        const response = await axios.get(`https://api.github.com/repos/${username}/`);
+        const response = await axios.get(`/api/users/${username}`);
+        console.log(response.data);
         setRepository(response.data);
       } catch (error) {
         console.log(error.message);
@@ -23,15 +22,35 @@ const RepositoryDetail = ({ person }) => {
   }, [username, repoName]);
 
   return (
-    <div>
+    <div className="main-container">
+      <Link to="/" >
+        Go to Home
+      </Link>
       {repository && (
         <div className="repository-detail">
-          <h2>{repository.name}</h2>
-          <p>{repository.description}</p>
-          <p>Language: {repository.language}</p>
-          <p>Stars: {repository.stargazers_count}</p>
-          <p>Created At: {new Date(repository.created_at).toLocaleDateString()}</p>
-          <a href={repository.html_url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
+          <div>
+            <img
+              src={repository.avatar_url}
+              alt={repository.name}
+              className="repository-image"
+            />
+          </div>
+          <div>
+            <h2>{repository.name}</h2>
+            <p>Location: {repository.location}</p>
+            <p>Following: {repository.following}</p>
+            <p>Followers: {repository.followers}</p>
+            <p>
+              Created At: {new Date(repository.created_at).toLocaleDateString()}
+            </p>
+            <a
+              href={repository.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on GitHub
+            </a>
+          </div>
         </div>
       )}
     </div>
@@ -39,5 +58,3 @@ const RepositoryDetail = ({ person }) => {
 };
 
 export default RepositoryDetail;
-
-

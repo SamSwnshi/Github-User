@@ -1,0 +1,19 @@
+.main-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    
+}
+
+.repository-detail{
+   
+    display: flex;
+    align-items: center;
+    
+}
+
+.repository-image{
+    border: transparent;
+border-radius: 100%;
+width: 60%;
+}

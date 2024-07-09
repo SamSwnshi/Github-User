@@ -1,8 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import RepositoryDetail from "../RepositoryDetailFollower/FollowerRepository"
-// import "./Followers.css";
+import "./Followers.css"
 
 const Followers = () => {
   const { username } = useParams();
@@ -11,7 +10,10 @@ const Followers = () => {
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const response = await axios.get(`https://api.github.com/users/${username}/followers`);
+        const response = await axios.get(
+          `/api/users/${username}/followers`
+        );
+        console.log(response.data)
         setFollowers(response.data);
       } catch (error) {
         console.log(error.message);
@@ -24,16 +26,19 @@ const Followers = () => {
   return (
     <div>
       <h2>{username} Followers</h2>
-      <div className="followers-wrapper">
-        {followers.map(follower => (
-          <div className="follower-card" key={follower.id}>
+      <div className="follow-wrapper">
+        {followers.map((follower) => (
+          <div className="follow-card" key={follower.id}>
             <img src={follower.avatar_url} alt={follower.login} />
-            <Link to={`/${follower.login}`}>
+            <Link to={`/follower/${follower.login}`}>
               <h3>{follower.login}</h3>
-              <RepositoryDetail detail={follower.login}/>
             </Link>
           </div>
         ))}
+        
+        <Link to="/" className="btn">
+            Go to Home
+          </Link>
       </div>
     </div>
   );
