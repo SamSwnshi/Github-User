@@ -11,13 +11,13 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     bio: {
-      tye: String,
+      type: String,
     },
     public_repos: {
-      type: String,
+      type: Number,
     },
     public_gists: {
-      type: String,
+      type: Number,
     },
     followers: {
       type: Number,
@@ -43,6 +43,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User",userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;

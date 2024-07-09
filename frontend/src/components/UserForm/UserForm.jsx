@@ -2,11 +2,16 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import RepositoryList from "../RepositoryList/RepositoryList";
 import "./UserForm.css";
+import { Link } from "react-router-dom";
+import Followers from "../Followers/Followers";
 
 const UserForm = () => {
   const [username, setUsername] = useState("");
   const [userData, setUserData] = useState(null);
   const [repositories, setRepositories] = useState([]);
+  const [followers,serFollowers] = useState([]);
+
+const token = 'YOUR_PERSONAL_ACCESS_TOKEN'; 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +71,8 @@ const UserForm = () => {
               <h3>Location: {userData.location}</h3>
               <h4>Bio: {userData.bio}</h4>
               <p>Followers: {userData.followers}</p>
+              <Link to={`/followers/${username}`}>
+              View Followers</Link>
             </div>
           </div>
           <h2>Repositories</h2>

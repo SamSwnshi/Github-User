@@ -4,13 +4,15 @@ export const getUserProfile = async (req, res) => {
   const { username } = req.params;
   try {
     const response = await axios.get(
-      `https://api.github.com/users/${username}`
+      `https://api.github.com/users/${username}`,{
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`
+        }
+      }
     );
 
-    const userProfile =  response.data;
+    const userProfile = response.data;
     res.status(200).json(userProfile);
-
-    
   } catch (error) {
     console.log("Error in Getting getUserProfile", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -21,21 +23,33 @@ export const saveProfile = async (req, res) => {
   let user = await User.findOne({ username });
 
   if (!user) {
-    const gitHub = await getUserProfile(username);
+    try {
+      const response = await axios.get(`https://api.github.com/users/${username}`, {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        },
+      });
+      const gitHub = response.data;
 
-    user = new User({
-      username: gitHub.login,
-      location: gitHub.location,
-      blog: gitHub.blog,
-      public_gists: gitHub.public_gists,
-      public_repos: gitHub.public_repos,
-      followers: gitHub.followers,
-      following: gitHub.following,
-    });
+      user = new User({
+        username: gitHub.login,
+        location: gitHub.location,
+        blog: gitHub.blog,
+        public_gists: gitHub.public_gists,
+        public_repos: gitHub.public_repos,
+        followers: gitHub.followers,
+        following: gitHub.following,
+      });
 
-    await user.save();
+      await user.save();
+      res.status(201).json(user);
+    } catch (error) {
+      console.log("Error in Saving userProfile", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  } else {
+    res.status(200).json(user);
   }
-  return user;
 };
 export const createUser = async (req, res) => {
   const { username } = req.body;
@@ -92,16 +106,18 @@ export const findMutualFriends = async (req, res) => {
       `https://api.github.com/users/${username}/following_url`
     );
 
-    const followers = followersData.data.map(user => user.login);
-    const following = following.data.map(user => user.login);
+    const followers = followersData.data.map((user) => user.login);
+    const following = following.data.map((user) => user.login);
 
-    const mutualFriend = followers.filter(follower => following.include(follower));
+    const mutualFriend = followers.filter((follower) =>
+      following.include(follower)
+    );
 
     user.friends = mutualFriend;
 
     await user.save();
 
-    res.json(mutualFriend)
+    res.json(mutualFriend);
   } catch (error) {
     console.log("Error in findingMutual userProfile", error.message);
     res.status(500).json({ message: "Internal Server Error" });

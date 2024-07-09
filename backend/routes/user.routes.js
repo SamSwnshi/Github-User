@@ -1,7 +1,20 @@
-    import express from "express";
-    import { getUserProfile } from "../controllers/user.controller.js";
-    const router = express.Router();
+import express from "express";
+import {
+  findMutualFriends,
+  getUserProfile,
+  createUser,
+  deleteUser,
+  updateUser,
+  saveProfile,
+} from "../controllers/user.controller.js";
 
-    router.get("/:username", getUserProfile);
+const router = express.Router();
 
-    export default router;
+router.post("/", createUser);
+router.get("/:username", getUserProfile);
+router.put("/:username", updateUser);
+router.post("/:username/save", saveProfile); 
+router.get("/:username/mutual-friend", findMutualFriends);
+router.delete("/:username", deleteUser);
+
+export default router;
