@@ -38,21 +38,24 @@ export const getUserProfile = async (req, res) => {
   try {
     const response = await axios.get(`https://api.github.com/users/${username}`, {
       headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}` // Replace with your actual token
+        Authorization: `token ${process.env.GITHUB_TOKEN}`
       }
     });
-
     const userProfile = response.data;
     res.status(200).json(userProfile);
   } catch (error) {
-    if (error.response && error.response.status === 404) {
+    if (error.response && error.response.status === 401) {
+      console.log("Unauthorized access to GitHub API. Check your token.");
+      res.status(401).json({ message: "Unauthorized" });
+    } else if (error.response && error.response.status === 404) {
       res.status(404).json({ message: "User not found" });
     } else {
-      console.log("Error in Getting getUserProfile", error.message);
+      console.error("Error in Getting getUserProfile:", error.message);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
 };
+
 export const saveProfile = async (req, res) => {
   const { username } = req.params;
   let user = await User.findOne({ username });
